@@ -1,8 +1,10 @@
 # Run with "uv run fastapi dev main.py"
 from fastapi import FastAPI
+from functools import wraps
 
 # Currying function
 def log_calls(func):
+    @wraps(func)
     async def wrapper(*args, **kwargs):
         print(f"calling {func.__name__}")
         result = await func(*args, **kwargs)
