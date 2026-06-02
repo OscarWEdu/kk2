@@ -29,7 +29,7 @@ class MyAPI:
             context = self.history.get_context()
 
             chain = prompt | self.llm
-            answer = chain.llm.invoke(prompt=chain.invoke(q=request.question), context=context)
+            answer = chain.invoke(q=request.question, context=context)
 
             self.history.add_turn(
                 user=request.question,
