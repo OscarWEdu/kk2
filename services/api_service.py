@@ -18,3 +18,4 @@ class ApiService:
     @log_calls
     def get_item(self, item_id: int, q: str | None = None) -> ItemResponse:
         return ItemResponse(items_id=item_id, q=q)
+
