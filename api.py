@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File
 from services.api_service import ApiService
 from models.api_model import HelloResponse, ItemResponse, LLMRequest
 from models.llm_model import PromptTemplate
 from services.llm_service import SmolLM, ConversationHistory
+from services.csv_service import CSVService
 
 class MyAPI:
     def __init__(self):
@@ -10,6 +11,7 @@ class MyAPI:
         self.service = ApiService()
         self.llm = SmolLM()
         self.history = ConversationHistory()
+        self.csv_service = CSVService()
         self._add_routes()
 
     def _add_routes(self):
@@ -37,7 +39,12 @@ class MyAPI:
             )
 
             return answer
+        
+        @self.app.post("/llm/upload_csv")
+        async def upload_csv(file: UploadFile = File(...)):
+            parsed = await self.csv_service.parse_csv(file)
 
+            return parsed
 
 # Expose the FastAPI
 api = MyAPI()
