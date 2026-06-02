@@ -29,4 +29,4 @@ class LLMChain(BaseModel):
 
 class HistoryPair(BaseModel):
     user: str
-    assistant: str
+    ai: str
