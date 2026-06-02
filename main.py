@@ -1,6 +1,7 @@
 # Run with "uv run fastapi dev main.py"
 from fastapi import FastAPI
 from functools import wraps
+from utils.config import config
 
 # Currying function
 def log_calls(func):
