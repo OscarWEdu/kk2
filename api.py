@@ -27,7 +27,7 @@ class MyAPI:
             )
             chain = prompt | self.llm
             result = chain.invoke(q=request.question)
-            return {"response": result}
+            return result
 
 
 # Expose the FastAPI
