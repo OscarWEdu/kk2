@@ -1,32 +1,21 @@
 from fastapi import FastAPI
-from functools import wraps
-
-# Currying function
-def log_calls(func):
-    @wraps(func)
-    async def wrapper(*args, **kwargs):
-        print(f"calling {func.__name__}")
-        result = await func(*args, **kwargs)
-        print(f"done {func.__name__}")
-        return result
-    return wrapper
-
+from services.api_service import ApiService
+from models.api_model import HelloResponse, ItemResponse
 
 class MyAPI:
     def __init__(self):
         self.app = FastAPI()
+        self.service = ApiService()
         self._add_routes()
 
     def _add_routes(self):
-        @self.app.get("/")
-        @log_calls
+        @self.app.get("/", response_model=HelloResponse)
         async def read_root():
-            return {"hello": "world"}
+            return self.service.get_root()
 
-        @self.app.get("/items/{item_id}")
-        @log_calls
+        @self.app.get("/items/{item_id}", response_model=ItemResponse)
         async def read_items(item_id: int, q: str | None = None):
-            return {"items_id": item_id, "q": q}
+            return self.service.get_item(item_id, q)
 
 
 # Expose the FastAPI
