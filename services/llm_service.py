@@ -1,4 +1,6 @@
 from transformers import pipeline
+from models.llm_model import HistoryPair
+
 
 class SmolLM:
     def __init__(self, model_name="HuggingFaceTB/SmolLM-135M-Instruct"):

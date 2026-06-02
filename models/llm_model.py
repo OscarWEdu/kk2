@@ -26,3 +26,7 @@ class LLMChain(BaseModel):
     def invoke(self, **kwargs):
         formatted_prompt = self.prompt_template.format(**kwargs)
         return self.llm.invoke(formatted_prompt)
+
+class HistoryPair(BaseModel):
+    user: str
+    assistant: str
