@@ -1,10 +1,7 @@
-#Run with "uv run fastapi dev main.py" 
-
+# Run with "uv run fastapi dev main.py"
 from fastapi import FastAPI
 
-app = FastAPI()
-
-#Currying function
+# Currying function
 def log_calls(func):
     async def wrapper(*args, **kwargs):
         print(f"calling {func.__name__}")
@@ -14,12 +11,23 @@ def log_calls(func):
     return wrapper
 
 
-@log_calls
-@app.get("/")
-async def read_root():
-    return {"hello": "world"}
-    
-@log_calls
-@app.get("/items/{item_id}")
-async def read_items(item_id: int, q: str | None = None):
-    return {"items_id": item_id, "q": q}
+class MyAPI:
+    def __init__(self):
+        self.app = FastAPI()
+        self._add_routes()
+
+    def _add_routes(self):
+        @self.app.get("/")
+        @log_calls
+        async def read_root():
+            return {"hello": "world"}
+
+        @self.app.get("/items/{item_id}")
+        @log_calls
+        async def read_items(item_id: int, q: str | None = None):
+            return {"items_id": item_id, "q": q}
+
+
+# Expose the FastAPI
+api = MyAPI()
+app = api.app
