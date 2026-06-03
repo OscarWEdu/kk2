@@ -18,6 +18,10 @@ class MyAPI:
         @self.app.get("/", response_model=HelloResponse)
         async def read_root():
             return self.service.get_root()
+        
+        @self.app.get("/health")
+        async def read_health():
+            return "ok"
 
         @self.app.post("/ai/ask")
         async def ask_llm(request: LLMRequest):
