@@ -69,11 +69,11 @@ class CSVService:
         stats_dict = csv_stats.to_dict()
         stats_dict = {str(column): i for column, i in stats_dict.items()}
 
-        # Compute Pearson correlation
-        numeric_df = self.df.select_dtypes(include=["int64", "float64"])
-        if not numeric_df.empty and numeric_df.shape[1] > 1:
-            correlation = numeric_df.corr(method="pearson")
-            stats_dict["pearson_r"] = correlation.to_dict()
+        # # Compute Pearson correlation
+        # numeric_df = self.df.select_dtypes(include=["int64", "float64"])
+        # if not numeric_df.empty and numeric_df.shape[1] > 1:
+        #     correlation = numeric_df.corr(method="pearson")
+        #     stats_dict["pearson_r"] = correlation.to_dict()
 
         return CSVStats(stats=stats_dict)
     
