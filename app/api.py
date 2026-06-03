@@ -1,9 +1,9 @@
 from fastapi import FastAPI, UploadFile, File
-from app.services.api_service import ApiService
+from services.api_service import ApiService
 from models.api_model import HelloResponse, LLMRequest
 from models.llm_model import PromptTemplate
-from app.services.llm_service import SmolLM, ConversationHistory
-from app.services.csv_service import CSVService
+from services.llm_service import SmolLM, ConversationHistory
+from services.csv_service import CSVService
 
 class MyAPI:
     def __init__(self):
