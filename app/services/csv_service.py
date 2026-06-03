@@ -2,13 +2,14 @@ import csv
 from io import StringIO
 from fastapi import UploadFile, HTTPException
 from typing import Any
-from models.csv_model import CSVData, CSVMetadata
+from models.csv_model import CSVData, CSVMetadata, CSVStats
 import pandas as pd
 
 class CSVService:
     def __init__(self):
         self.data: CSVData | None = None
         self.df: pd.DataFrame | None = None
+        self.stats: dict | None = None
 
     def _typecheck(self, value: str) -> Any: #Do some typechecking on csv fields
         try:
@@ -25,7 +26,7 @@ class CSVService:
 
     def get_metadata(self) -> CSVMetadata:
         if self.df is None:
-            raise HTTPException(status_code=404, detail="No CSV data uploaded yet")
+            raise HTTPException(status_code=404, detail="No CSV has been uploaded.")
 
         return CSVMetadata(
             num_rows = len(self.df),
@@ -48,5 +49,17 @@ class CSVService:
         parsed_csv = CSVData(columns=columns, rows=rows)
         self.data = parsed_csv
         self.df = pd.DataFrame(rows)
+        self.stats = None
 
         return parsed_csv
+    
+    def get_stats(self) -> CSVStats:
+        if self.df is None:
+            raise HTTPException(status_code=404, detail="No CSV has been uploaded.")
+
+        csv_stats = self.df.describe(include="all")
+        stats_dict = csv_stats.to_dict()
+
+        stats_dict = {str(column): i for column, i in stats_dict.items()}
+
+        return CSVStats(stats=stats_dict)

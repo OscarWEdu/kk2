@@ -9,3 +9,6 @@ class CSVMetadata(BaseModel):
     num_rows: int
     columns: List[str]
     dtypes: Dict[Any, str]
+
+class CSVStats(BaseModel):
+    stats: Dict[str, Dict[Any, Any]]

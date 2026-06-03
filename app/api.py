@@ -3,7 +3,7 @@ from services.api_service import ApiService
 from models.api_model import HelloResponse, LLMRequest
 from models.llm_model import PromptTemplate
 from services.llm_service import SmolLM, ConversationHistory
-from services.csv_service import CSVService
+from services.csv_service import CSVService, CSVMetadata, CSVStats
 
 
 class MyAPI:
@@ -24,9 +24,9 @@ class MyAPI:
         async def read_health():
             return "ok"
         
-        @self.app.get("/data/stats")
+        @self.app.get("/data/stats", response_model=CSVStats)
         async def get_stats():
-            return "TODO"
+            return self.csv_service.get_stats()
 
         @self.app.post("/ai/ask")
         async def ask_llm(request: LLMRequest):
@@ -44,7 +44,7 @@ class MyAPI:
 
             return answer
         
-        @self.app.post("/data/upload_csv")
+        @self.app.post("/data/upload_csv", response_model=CSVMetadata)
         async def upload_csv(file: UploadFile = File(...)):
             await self.csv_service.parse_csv(file)
             return self.csv_service.get_metadata()
