@@ -1,4 +1,4 @@
-from models.api_model import HelloResponse
+from app.models.api_model import HelloResponse
 from functools import wraps
 
 # Decorator method for logging

@@ -2,7 +2,7 @@ import csv
 from io import StringIO
 from fastapi import UploadFile, HTTPException
 from typing import Any
-from models.csv_model import CSVData, CSVMetadata, CSVStats
+from app.models.csv_model import CSVData, CSVMetadata, CSVStats
 import pandas as pd
 
 class CSVService:

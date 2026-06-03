@@ -1,6 +1,6 @@
 from transformers import pipeline
 from typing import List
-from models.llm_model import HistoryPair, Runnable
+from app.models.llm_model import HistoryPair, Runnable
 from typing import Any, Dict
 
 # Class handling llm conversation memory

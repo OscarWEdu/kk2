@@ -1,3 +1,3 @@
 # Run with "uv run fastapi dev main.py"
-from utils.config import config
-from api import app
+from app.utils.config import config
+from app.api import app
