@@ -1,4 +1,5 @@
 from app.models.api_model import HelloResponse
+from app.utils.config import config
 from functools import wraps
 
 # Decorator method for logging
@@ -14,5 +15,5 @@ def log_calls(func):
 class ApiService:
     @log_calls
     def get_root(self) -> HelloResponse:
-        return HelloResponse(hello="Viable endpoints are:\nPOST /data/upload\nGET /data/stats\nPOST /ai/askGET /health")
+        return HelloResponse(hello = (f"Name of app: {config.app_name}\nViable endpoints are:\nPOST /data/upload\nGET /data/stats\nPOST /ai/askGET /health"))
 
