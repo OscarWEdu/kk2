@@ -5,6 +5,7 @@ from models.llm_model import PromptTemplate
 from services.llm_service import SmolLM, ConversationHistory
 from services.csv_service import CSVService
 
+
 class MyAPI:
     def __init__(self):
         self.app = FastAPI()
@@ -45,9 +46,8 @@ class MyAPI:
         
         @self.app.post("/data/upload_csv")
         async def upload_csv(file: UploadFile = File(...)):
-            parsed = await self.csv_service.parse_csv(file)
-
-            return parsed
+            await self.csv_service.parse_csv(file)
+            return self.csv_service.get_metadata()
 
 # Expose the FastAPI
 api = MyAPI()
