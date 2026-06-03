@@ -44,3 +44,23 @@ def test_endpoint_upload_csv_invalid_file():
 def test_endpoint_upload_csv_no_file():
     response = client.post("/data/upload_csv", files={})
     assert response.status_code == 422
+
+
+
+def test_endpoint_data_stats_no_file():
+    response = client.get("/data/stats")
+    assert response.status_code == 404
+
+
+def test_endpoint_data_stats():
+    files = {
+        "file": ("test.csv", BytesIO(make_test_csv()), "text/csv")
+    }
+    response = client.post("/data/upload_csv", files=files)
+    assert response.status_code == 200
+
+    stats_response = client.get("/data/stats")
+    assert stats_response.status_code == 200
+    stats = stats_response.json()["stats"]
+    assert "col1" in stats
+    assert "col2" in stats

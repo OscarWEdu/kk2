@@ -62,7 +62,7 @@ class CSVService:
     
     # Runs describe() on the relevant data, and stores it
     def get_stats(self) -> CSVStats:
-        if self.df is None:
+        if self.df is None or self.df.empty:
             raise HTTPException(status_code=404, detail="No CSV has been uploaded.")
 
         csv_stats = self.df.describe(include="all")
