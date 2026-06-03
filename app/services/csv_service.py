@@ -30,6 +30,9 @@ class CSVService:
         if self.df is None:
             raise HTTPException(status_code=404, detail="No CSV has been uploaded.")
 
+        if self.df.empty or len(self.df.columns) == 0:
+            raise HTTPException(status_code=400, detail="Invalid file")
+                            
         return CSVMetadata(
             num_rows = len(self.df),
             columns = self.df.columns.tolist(),
@@ -42,6 +45,7 @@ class CSVService:
         text = content.decode("utf-8")
 
         reader = csv.DictReader(StringIO(text))
+        
         rows = []
         for row in reader:
             converted = {i: self._typecheck(data) for i, data in row.items()}

@@ -26,7 +26,6 @@ def test_endpoint_upload_csv():
     files = {
         "file": ("test.csv", BytesIO(make_test_csv()), "text/csv")
     }
-
     response = client.post("/data/upload_csv", files=files)
     metadata = response.json()
 
@@ -34,4 +33,14 @@ def test_endpoint_upload_csv():
     assert metadata["num_rows"] == 2
     assert metadata["columns"] == ["col1", "col2"]
     assert "dtypes" in metadata
-    
+
+def test_endpoint_upload_csv_invalid_file():
+    files = {
+        "file": ("bad.txt", BytesIO(b"Not a csv"), "text/plain")
+    }
+    response = client.post("/data/upload_csv", files=files)
+    assert response.status_code == 400
+
+def test_endpoint_upload_csv_no_file():
+    response = client.post("/data/upload_csv", files={})
+    assert response.status_code == 422
