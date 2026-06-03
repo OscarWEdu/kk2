@@ -36,6 +36,10 @@ class MyAPI:
 
             context = self.history.get_context()
 
+            if self.csv_service.df is not None:
+                stats_text = self.csv_service.get_formatted_stats()
+                context = f"{context}\n\nDataset statistics:\n{stats_text}"
+
             chain = prompt | self.llm
 
             result = chain.invoke({"q": request.question, "context": context})

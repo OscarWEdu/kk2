@@ -68,3 +68,15 @@ class CSVService:
 
         return CSVStats(stats=stats_dict)
     
+    # Returns the stats from describe() in a string format for the llm
+    def get_formatted_stats(self) -> str:
+        stats = self.get_stats().stats
+        lines = []
+
+        for column, column_stats in stats.items():
+            lines.append(f"Column: {column}")
+            for stat_name, value in column_stats.items():
+                lines.append(f"  {stat_name}: {value}")
+            lines.append("") #Empty Line
+
+        return "\n".join(lines)

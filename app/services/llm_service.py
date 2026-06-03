@@ -26,7 +26,7 @@ class ConversationHistory:
 class SmolLM(Runnable):
     pipe: Any = None
 
-    def __init__(self, model_name="HuggingFaceTB/SmolLM-135M-Instruct"):
+    def __init__(self, model_name="HuggingFaceTB/SmolLM2-135M-Instruct"): #recommended model for release HuggingFaceTB/SmolLM-1.7B-Instruct
         super().__init__()
         from transformers import pipeline
         self.pipe = pipeline("text-generation", model_name)
