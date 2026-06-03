@@ -4,23 +4,23 @@ from app.models.llm_model import HistoryPair, Runnable
 from typing import Any, Dict
 
 # Class handling llm conversation memory
-class ConversationHistory:
-    def __init__(self):
-        self.history: List[HistoryPair] = []
+class ConversationHistory(Runnable):
+    history: List[HistoryPair] = []
 
-    # Adds a 'turn' to the memory, defined as pair of a question + response
     def add_turn(self, user: str, ai: str):
         self.history.append(HistoryPair(user=user, ai=ai))
 
-    # Returns the entire history if it exists, formatted with a newline as separator
     def get_context(self) -> str:
         if not self.history:
             return ""
-
         return "\n".join(
             f"User: {turn.user}\nLLM: {turn.ai}"
             for turn in self.history
         )
+
+    def invoke(self, input: Dict[str, Any]) -> Dict[str, Any]:
+        context = self.get_context()
+        return {"context": context, **input}
 
 # Core llm class, hardcoded to use the provided llm model
 class SmolLM(Runnable):

@@ -30,17 +30,18 @@ class MyAPI:
 
         @self.app.post("/ai/ask")
         async def ask_llm(request: LLMRequest):
+            history_runnable = self.history
             prompt = PromptTemplate(
                 template_str="Based on the data you have, answer the question: {q}"
             )
 
-            context = self.history.get_context()
+            context = history_runnable.get_context()
 
             if self.csv_service.df is not None:
                 stats_text = self.csv_service.get_formatted_stats()
                 context = f"{context}\n\nDataset statistics:\n{stats_text}"
 
-            chain = prompt | self.llm
+            chain = history_runnable | prompt | self.llm
 
             result = chain.invoke({"q": request.question, "context": context})
             answer = result["answer"]
