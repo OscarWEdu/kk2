@@ -1,4 +1,4 @@
-from models.api_model import HelloResponse, ItemResponse
+from models.api_model import HelloResponse
 from functools import wraps
 
 def log_calls(func):
@@ -13,9 +13,5 @@ def log_calls(func):
 class ApiService:
     @log_calls
     def get_root(self) -> HelloResponse:
-        return HelloResponse(hello="world")
-
-    @log_calls
-    def get_item(self, item_id: int, q: str | None = None) -> ItemResponse:
-        return ItemResponse(items_id=item_id, q=q)
+        return HelloResponse(hello="Viable endpoints are:\nPOST /data/upload\nGET /data/stats\nPOST /ai/askGET /health")
 
