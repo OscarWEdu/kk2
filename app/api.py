@@ -2,7 +2,7 @@ from fastapi import FastAPI, UploadFile, File
 from app.services.api_service import ApiService
 from app.models.api_model import HelloResponse, LLMRequest
 from app.models.llm_model import PromptTemplate
-from app.services.llm_service import SmolLM, ConversationHistory
+from app.services.llm_service import SmolLM, ConversationHistory, DataStats
 from app.services.csv_service import CSVService, CSVMetadata, CSVStats
 
 # Core api class
@@ -31,17 +31,13 @@ class MyAPI:
         @self.app.post("/ai/ask")
         async def ask_llm(request: LLMRequest):
             history_runnable = self.history
+            stats_runnable = DataStats(csv_service=self.csv_service)
             prompt = PromptTemplate(
                 template_str="Based on the data you have, answer the question: {q}"
             )
-
             context = history_runnable.get_context()
 
-            if self.csv_service.df is not None:
-                stats_text = self.csv_service.get_formatted_stats()
-                context = f"{context}\n\nDataset statistics:\n{stats_text}"
-
-            chain = history_runnable | prompt | self.llm
+            chain = history_runnable | stats_runnable | prompt | self.llm
 
             result = chain.invoke({"q": request.question, "context": context})
             answer = result["answer"]

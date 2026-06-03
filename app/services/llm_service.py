@@ -21,6 +21,18 @@ class ConversationHistory(Runnable):
     def invoke(self, input: Dict[str, Any]) -> Dict[str, Any]:
         context = self.get_context()
         return {"context": context, **input}
+    
+class DataStats(Runnable):
+    csv_service: Any
+
+    def invoke(self, input: Dict[str, Any]) -> Dict[str, Any]:
+        context = input.get("context", "")
+        if self.csv_service.df is None:
+            return input
+        
+        stats_text = self.csv_service.get_formatted_stats()
+        new_context = f"{context}\n\nDataset statistics:\n{stats_text}"
+        return {**input, "context": new_context}
 
 # Core llm class, hardcoded to use the provided llm model
 class SmolLM(Runnable):
