@@ -71,7 +71,7 @@ class CSVService:
 
         # Compute Pearson correlation
         numeric_df = self.df.select_dtypes(include=["int64", "float64"])
-        if not numeric_df.empty:
+        if not numeric_df.empty and numeric_df.shape[1] > 1:
             correlation = numeric_df.corr(method="pearson")
             stats_dict["pearson_r"] = correlation.to_dict()
 
