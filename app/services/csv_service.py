@@ -4,6 +4,9 @@ from fastapi import UploadFile, HTTPException
 from typing import Any
 from app.models.csv_model import CSVData, CSVMetadata, CSVStats
 import pandas as pd
+import logging
+
+logger = logging.getLogger(__name__)
 
 class CSVService:
     def __init__(self):
@@ -28,10 +31,12 @@ class CSVService:
     # Returns some given metadata about the csv data
     def get_metadata(self) -> CSVMetadata:
         if self.df is None:
+            logger.error("get_metadata called, but no CSV has been uploaded.")
             raise HTTPException(status_code=404, detail="No CSV has been uploaded.")
 
         if self.df.empty or len(self.df.columns) == 0:
-            raise HTTPException(status_code=400, detail="Invalid file")
+            logger.error("get_metadata called, but invalid file.")
+            raise HTTPException(status_code=400, detail="Invalid file.")
                             
         return CSVMetadata(
             num_rows = len(self.df),
@@ -63,6 +68,7 @@ class CSVService:
     # Runs describe() on the relevant data, and stores it
     def get_stats(self) -> CSVStats:
         if self.df is None or self.df.empty:
+            logger.error("get_stats called, but no CSV has been uploaded.")
             raise HTTPException(status_code=404, detail="No CSV has been uploaded.")
 
         csv_stats = self.df.describe(include="all")

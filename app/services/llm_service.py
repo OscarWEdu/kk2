@@ -2,6 +2,9 @@ from transformers import pipeline
 from typing import List
 from app.models.llm_model import HistoryPair, Runnable
 from typing import Any, Dict
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Class handling llm conversation memory
 class ConversationHistory(Runnable):
@@ -58,6 +61,7 @@ class SmolLM(Runnable):
         messages.append({"role": "user", "content": prompt})
 
         output = self.pipe(messages, max_new_tokens=150)
+        logger.info("LLM Output: %s", output)
         answer = output[0]["generated_text"][-1]["content"]
 
         return {"answer": answer, **input}
