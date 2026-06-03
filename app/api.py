@@ -5,7 +5,7 @@ from models.llm_model import PromptTemplate
 from services.llm_service import SmolLM, ConversationHistory
 from services.csv_service import CSVService, CSVMetadata, CSVStats
 
-
+# Core api class
 class MyAPI:
     def __init__(self):
         self.app = FastAPI()

@@ -1,6 +1,7 @@
 from models.api_model import HelloResponse
 from functools import wraps
 
+# Decorator method for logging
 def log_calls(func):
     @wraps(func)
     def wrapper(*args, **kwargs):

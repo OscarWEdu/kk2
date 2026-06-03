@@ -11,6 +11,7 @@ class CSVService:
         self.df: pd.DataFrame | None = None
         self.stats: dict | None = None
 
+    # Does typechecks on the given csv value and returns it correctly typed
     def _typecheck(self, value: str) -> Any: #Do some typechecking on csv fields
         try:
             return int(value)
@@ -24,6 +25,7 @@ class CSVService:
 
         return value
 
+    # Returns some given metadata about the csv data
     def get_metadata(self) -> CSVMetadata:
         if self.df is None:
             raise HTTPException(status_code=404, detail="No CSV has been uploaded.")
@@ -34,6 +36,7 @@ class CSVService:
             dtypes = self.df.dtypes.apply(str).to_dict()
         )
 
+    # Parses a csv file using the built in csv library, and stores it
     async def parse_csv(self, file: UploadFile) -> CSVData:
         content = await file.read()
         text = content.decode("utf-8")
@@ -53,6 +56,7 @@ class CSVService:
 
         return parsed_csv
     
+    # Runs describe() on the relevant data, and stores it
     def get_stats(self) -> CSVStats:
         if self.df is None:
             raise HTTPException(status_code=404, detail="No CSV has been uploaded.")
@@ -63,3 +67,4 @@ class CSVService:
         stats_dict = {str(column): i for column, i in stats_dict.items()}
 
         return CSVStats(stats=stats_dict)
+    
