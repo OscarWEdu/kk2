@@ -22,6 +22,10 @@ class MyAPI:
         @self.app.get("/health")
         async def read_health():
             return "ok"
+        
+        @self.app.get("/data/stats")
+        async def get_stats():
+            return "TODO"
 
         @self.app.post("/ai/ask")
         async def ask_llm(request: LLMRequest):
