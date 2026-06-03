@@ -28,15 +28,15 @@ class MyAPI:
             prompt = PromptTemplate(
                 template_str="Based on the data you have, answer the question: {q}"
             )
+
             context = self.history.get_context()
 
             chain = prompt | self.llm
-            answer = chain.invoke(q=request.question, context=context)
 
-            self.history.add_turn(
-                user=request.question,
-                ai=answer
-            )
+            result = chain.invoke({"q": request.question, "context": context})
+            answer = result["answer"]
+
+            self.history.add_turn(request.question, answer)
 
             return answer
         
