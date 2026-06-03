@@ -3,13 +3,14 @@ from fastapi import UploadFile
 from app.main import app
 from io import BytesIO
 
+client = TestClient(app)
+
 # Creates a simple csv for the sole purpose of testing
 def make_test_csv(): #Wasn't too fond of the idea of storing a csv file for the sole purpose of testing
     csv_text = "col1,col2\n1,2\n3,4\n"
     return csv_text.encode("utf-8")
 
-client = TestClient(app)
-
+# TESTS:
 def test_endpoint_root():
     response = client.get("/")
     assert response.status_code == 200
@@ -45,12 +46,9 @@ def test_endpoint_upload_csv_no_file():
     response = client.post("/data/upload_csv", files={})
     assert response.status_code == 422
 
-
-
 def test_endpoint_data_stats_no_file():
     response = client.get("/data/stats")
     assert response.status_code == 404
-
 
 def test_endpoint_data_stats():
     files = {
@@ -64,3 +62,16 @@ def test_endpoint_data_stats():
     stats = stats_response.json()["stats"]
     assert "col1" in stats
     assert "col2" in stats
+
+def test_endpoint_ai_ask(monkeypatch):
+    test_answer = "42."
+    def mock_invoke(self, input):
+        return {"answer": test_answer, **input}
+
+    from app.services.llm_service import SmolLM
+    monkeypatch.setattr(SmolLM, "invoke", mock_invoke) # patch invoke
+
+    response = client.post("/ai/ask", json = {"question": "What is the meaning of testing?"})
+
+    assert response.status_code == 200
+    assert response.json() == test_answer
