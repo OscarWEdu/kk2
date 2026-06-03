@@ -1,4 +1,4 @@
-from app.services.llm_service import SmolLM, ConversationHistory
+from app.services.llm_service import SmolLM, ConversationHistory, DataStats
 from app.models.llm_model import HistoryPair
 
 def test_runnable_history_empty_context():
@@ -9,12 +9,35 @@ def test_runnable_history_empty_context():
     assert out["question"] == "Hello"
 
 def test_runnable_history():
-    history = ConversationHistory(history=[ HistoryPair(user="q1", ai="a1") ])
+    history = ConversationHistory(history = [ HistoryPair(user = "q1", ai = "a1") ])
 
     out = history.invoke({"question": "some string"})
     assert "User: q1" in out["context"]
     assert "LLM: a1" in out["context"]
 
+def test_runnable_datastats_no_csv():
+    class MockCSV:
+        df = None
+
+    runnable = DataStats(csv_service = MockCSV())
+
+    out = runnable.invoke({"context": "c1", "q": "c2"})
+
+    assert out["context"] == "c1"
+    assert out["q"] == "c2"
+
+def test_runnable_datastats():
+    class MockCSV:
+        df = True
+
+        def get_formatted_stats(self):
+            return "col1: butts = 5"
+
+    runnable = DataStats(csv_service = MockCSV())
+    out = runnable.invoke({"context": "c1", "q": "c2"})
+
+    assert "Dataset statistics" in out["context"]
+    assert "col1: butts = 5" in out["context"]
 
 def test_runnable_smollm(monkeypatch):
     test_answer = "42."
