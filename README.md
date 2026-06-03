@@ -27,7 +27,7 @@ To run the tests run the following:
 uv run pytest app/tests/ -v
 ```
 
-The API also expects an .env file in the root directory of the project, with the follwing variable:
+The API also expects an .env file in the root directory of the project, with the following variable:
 ```
 APP_NAME=String
 ```
